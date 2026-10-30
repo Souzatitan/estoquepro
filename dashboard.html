@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EstoquePro | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="EstoquePro início">
+        <span class="brand-mark">◆</span>
+        <span>Estoque<span class="brand-accent">Pro</span></span>
+      </a>
+
+      <div class="side-label">MENU PRINCIPAL</div>
+      <nav class="navigation">
+        <button class="nav-item active" data-page="Dashboard"><span class="nav-icon">▦</span>Dashboard</button>
+        <button class="nav-item" data-page="Produtos"><span class="nav-icon">▣</span>Produtos</button>
+        <button class="nav-item" data-page="Movimentações"><span class="nav-icon">⇄</span>Movimentações</button>
+        <button class="nav-item" data-page="Relatórios"><span class="nav-icon">▤</span>Relatórios</button>
+        <button class="nav-item" data-page="Análise de Dados"><span class="nav-icon">▥</span>Análise de Dados</button>
+        <button class="nav-item" data-page="Previsão de Demanda"><span class="nav-icon">⌁</span>Previsão de Demanda</button>
+      </nav>
+
+      <div class="side-label side-label-bottom">GERENCIAMENTO</div>
+      <nav class="navigation">
+        <button class="nav-item" data-page="Usuários"><span class="nav-icon">♙</span>Usuários</button>
+        <button class="nav-item" data-page="Configurações"><span class="nav-icon">⚙</span>Configurações</button>
+      </nav>
+
+      <div class="sidebar-user">
+        <div class="avatar">AS</div>
+        <div><strong>Acesso Administrativo</strong><small>Administrador</small></div>
+        <button class="logout-button" id="logoutButton" title="Sair" aria-label="Sair">↪</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+        <div class="breadcrumb"><span>Visão geral</span><b>/</b><strong id="pageTitle">Dashboard</strong></div>
+        <div class="topbar-actions">
+          <button class="icon-button" aria-label="Notificações">♧<i></i></button>
+          <div class="top-user"><div class="avatar avatar-small">AS</div><div><strong>Acesso Administrativo</strong><small>Administrador</small></div><span>⌄</span></div>
+        </div>
+      </header>
+
+      <section class="page-content">
+        <div class="page-heading">
+          <div><h1 id="headingTitle">Dashboard</h1><p>Visão geral do seu estoque</p></div>
+          <div class="heading-date">● <span id="today"></span></div>
+        </div>
+
+        <section class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-icon blue">▣</div>
+            <div class="stat-info"><span>Total de Produtos</span><strong>124</strong><small class="positive">↗ 5,1% <em>no mês</em></small></div>
+            <span class="stat-watermark">▣</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon green">▦</div>
+            <div class="stat-info"><span>Produtos em Estoque</span><strong>108</strong><small class="positive">87% <em>do total</em></small></div>
+            <span class="stat-watermark">▦</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon red">⚠</div>
+            <div class="stat-info"><span>Estoque Baixo</span><strong>12</strong><small class="negative">↓ 9% <em>do total</em></small></div>
+            <span class="stat-watermark">⚠</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon purple">▧</div>
+            <div class="stat-info"><span>Valor Total de Estoque</span><strong>R$ 48.732,50</strong><small class="positive">↗ 4,3% <em>no mês</em></small></div>
+            <span class="stat-watermark">▧</span>
+          </article>
+        </section>
+
+        <section class="overview-grid">
+          <article class="panel movement-panel">
+            <div class="panel-heading"><div><h2>Movimentações no Período</h2><p>Entradas e saídas de produtos</p></div><div class="legend"><span><i class="legend-dot entry"></i>Entradas</span><span><i class="legend-dot exit"></i>Saídas</span></div></div>
+            <div class="chart-wrap">
+              <div class="y-labels"><span>200</span><span>150</span><span>100</span><span>50</span><span>0</span></div>
+              <svg class="line-chart" viewBox="0 0 700 220" preserveAspectRatio="none" role="img" aria-label="Gráfico de movimentações">
+                <defs>
+                  <linearGradient id="entryFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#27b985" stop-opacity=".18"/><stop offset="1" stop-color="#27b985" stop-opacity="0"/></linearGradient>
+                  <linearGradient id="exitFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3978ee" stop-opacity=".12"/><stop offset="1" stop-color="#3978ee" stop-opacity="0"/></linearGradient>
+                </defs>
+                <g class="grid-lines"><path d="M0 15H700 M0 61H700 M0 107H700 M0 153H700 M0 199H700"/></g>
+                <path class="area-entry" d="M0 145 L58 151 L116 105 L174 143 L232 111 L290 139 L348 119 L406 128 L464 79 L522 98 L580 75 L638 111 L700 25 L700 199 L0 199Z"/>
+                <path class="area-exit" d="M0 178 L58 164 L116 173 L174 149 L232 161 L290 147 L348 160 L406 143 L464 151 L522 129 L580 151 L638 139 L700 105 L700 199 L0 199Z"/>
+                <path class="line-entry" d="M0 145 L58 151 L116 105 L174 143 L232 111 L290 139 L348 119 L406 128 L464 79 L522 98 L580 75 L638 111 L700 25"/>
+                <path class="line-exit" d="M0 178 L58 164 L116 173 L174 149 L232 161 L290 147 L348 160 L406 143 L464 151 L522 129 L580 151 L638 139 L700 105"/>
+                <g class="chart-points"><circle cx="116" cy="105" r="4"/><circle cx="290" cy="139" r="4"/><circle cx="464" cy="79" r="4"/><circle cx="700" cy="25" r="4"/></g>
+              </svg>
+            </div>
+            <div class="x-labels"><span>01/09</span><span>05/09</span><span>10/09</span><span>15/09</span><span>20/09</span><span>25/09</span><span>30/09</span></div>
+          </article>
+
+          <article class="panel category-panel">
+            <div class="panel-heading"><div><h2>Categorias</h2><p>Distribuição dos produtos</p></div><button class="more-button" aria-label="Mais opções">•••</button></div>
+            <div class="category-content">
+              <div class="donut"><div class="donut-center"><strong>124</strong><span>Produtos</span></div></div>
+              <div class="category-legend">
+                <div><i class="cat-blue"></i><span>Alimentos</span><b>34%</b></div>
+                <div><i class="cat-green"></i><span>Bebidas</span><b>22%</b></div>
+                <div><i class="cat-yellow"></i><span>Limpeza</span><b>15%</b></div>
+                <div><i class="cat-purple"></i><span>Higiene</span><b>12%</b></div>
+                <div><i class="cat-gray"></i><span>Outros</span><b>17%</b></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="tables-grid">
+          <article class="panel table-panel">
+            <div class="panel-heading"><div><h2>Produtos em Estoque Baixo</h2><p>Produtos que precisam de reposição</p></div><a href="#" class="text-link">Ver todos →</a></div>
+            <div class="table-scroll"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Estoque Atual</th><th>Estoque Mínimo</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Arroz 5kg</td><td>Alimentos</td><td class="low-number">8</td><td>10</td><td><span class="status status-low">Baixo</span></td></tr>
+                <tr><td>Detergente 500ml</td><td>Limpeza</td><td class="low-number">6</td><td>10</td><td><span class="status status-low">Baixo</span></td></tr>
+                <tr><td>Refrigerante 2L</td><td>Bebidas</td><td>12</td><td>20</td><td><span class="status status-low">Baixo</span></td></tr>
+                <tr><td>Papel Higiênico</td><td>Higiene</td><td>15</td><td>30</td><td><span class="status status-low">Baixo</span></td></tr>
+              </tbody>
+            </table></div>
+          </article>
+
+          <article class="panel table-panel recent-panel">
+            <div class="panel-heading"><div><h2>Últimas Movimentações</h2><p>Registros recentes do estoque</p></div><a href="#" class="text-link">Ver todas →</a></div>
+            <div class="table-scroll"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Quantidade</th></tr></thead>
+              <tbody>
+                <tr><td>30/09/2025</td><td>Arroz 5kg</td><td><span class="status status-entry">Entrada</span></td><td class="quantity-positive">+50</td></tr>
+                <tr><td>30/09/2025</td><td>Refrigerante 2L</td><td><span class="status status-exit">Saída</span></td><td class="quantity-negative">-12</td></tr>
+                <tr><td>29/09/2025</td><td>Detergente 500ml</td><td><span class="status status-entry">Entrada</span></td><td class="quantity-positive">+30</td></tr>
+                <tr><td>28/09/2025</td><td>Papel Higiênico</td><td><span class="status status-exit">Saída</span></td><td class="quantity-negative">-20</td></tr>
+              </tbody>
+            </table></div>
+          </article>
+        </section>
+        <footer class="footer">© 2025 EstoquePro. Todos os direitos reservados. <span>Versão demonstrativa 1.0</span></footer>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
