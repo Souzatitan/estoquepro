@@ -1,0 +1,32 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Segredos e configuracoes locais
+.env
+.env.*
+!.env.example
+
+# Django
+db.sqlite3
+staticfiles/
+
+# Editores
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Dados reais exportados do ERP - manter somente localmente
+backend/gestao_materiais/dados/estoque_oracle_local.json
+
+# Backups locais de configuração
+*.bak

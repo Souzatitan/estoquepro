@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>EstoquePro | Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'gestao_materiais/css/dashboard.css' %}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        
+<!-- MENU LATERAL -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">EstoquePro</div>
+
+    <div class="menu-titulo">Principal</div>
+
+    <nav class="menu">
+        <a href="{% url 'dashboard' %}">
+            ▦ Dashboard
+        </a>
+
+        <a href="{% url 'lista_estoque' %}" class="ativo">
+            ▤ Estoque
+        </a>
+    </nav>
+
+    <div class="menu-titulo">Relatórios</div>
+
+    <nav class="menu">
+        <a href="{% url 'exportar_estoque_csv' %}">
+            ⇩ Exportar estoque
+        </a>
+    </nav>
+
+    <form method="POST" action="{% url 'logout' %}" class="logout">
+        {% csrf_token %}
+        <button type="submit">
+            ⇥ Sair do sistema
+        </button>
+    </form>
+
+</aside>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="conteudo">
+
+            <!-- CABEÇALHO -->
+            <header class="topo">
+
+                <button
+                    type="button"
+                    class="menu-mobile"
+                    id="menuMobile"
+                    aria-label="Abrir menu"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="subtitulo">
+                        Visão geral do controle de estoque
+                    </p>
+                </div>
+
+                <div class="usuario">
+                    Painel administrativo
+                </div>
+
+            </header>
+
+            <!-- INDICADORES -->
+            {% if indicadores %}
+
+            <section class="cartoes">
+
+                <article class="cartao">
+
+                    <div class="cartao-cabecalho">
+                        <span class="cartao-titulo">Total de produtos</span>
+                        <span class="cartao-icone">▦</span>
+                    </div>
+
+                    <strong class="cartao-valor">
+                        {{ indicadores.total_produtos|floatformat:0 }}
+                    </strong>
+
+                    <span class="cartao-descricao">
+                        Produtos cadastrados
+                    </span>
+
+                </article>
+
+                <article class="cartao cartao-zerado">
+
+                    <div class="cartao-cabecalho">
+                        <span class="cartao-titulo">Estoque zerado</span>
+                        <span class="cartao-icone">!</span>
+                    </div>
+
+                    <strong class="cartao-valor">
+                        {{ indicadores.estoque_zero|floatformat:0 }}
+                    </strong>
+
+                    <span class="cartao-descricao">
+                        Produtos sem saldo
+                    </span>
+
+                </article>
+
+                <article class="cartao cartao-positivo">
+
+                    <div class="cartao-cabecalho">
+                        <span class="cartao-titulo">Estoque positivo</span>
+                        <span class="cartao-icone">✓</span>
+                    </div>
+
+                    <strong class="cartao-valor">
+                        {{ indicadores.estoque_positivo|floatformat:0 }}
+                    </strong>
+
+                    <span class="cartao-descricao">
+                        Produtos com saldo
+                    </span>
+
+                </article>
+
+                <article class="cartao cartao-negativo">
+
+                    <div class="cartao-cabecalho">
+                        <span class="cartao-titulo">Estoque negativo</span>
+                        <span class="cartao-icone">↓</span>
+                    </div>
+
+                    <strong class="cartao-valor">
+                        {{ indicadores.estoque_negativo|floatformat:0 }}
+                    </strong>
+
+                    <span class="cartao-descricao">
+                        Produtos com saldo negativo
+                    </span>
+
+                </article>
+
+            </section>
+
+            {% endif %}
+
+            <!-- GRÁFICOS E RESUMO FINANCEIRO -->
+            {% if indicadores %}
+
+            <section class="graficos">
+
+                <div class="grafico-card">
+
+                    <h2>Distribuição do estoque</h2>
+
+                    <p>Quantidade de produtos por situação</p>
+
+                    <div class="grafico-container">
+                        <canvas id="graficoEstoque"></canvas>
+                    </div>
+
+                </div>
+
+                <div class="grafico-card">
+
+                    <h2>Resumo financeiro</h2>
+
+                    <p>Valor total registrado no estoque</p>
+
+                    <strong class="cartao-valor" id="valorTotal">
+                        {{ indicadores.valor_total }}
+                    </strong>
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+            <!-- FILTROS E PESQUISA -->
+            <section class="painel">
+
+                <h2 class="painel-titulo">Consultar produtos</h2>
+
+                <form method="get" class="filtros">
+
+                    <div class="campo campo-busca">
+
+                        <label for="q">Pesquisar produto</label>
+
+                        <input
+                            id="q"
+                            type="search"
+                            name="q"
+                            value="{{ termo }}"
+                            placeholder="Código ou nome do produto"
+                        >
+
+                    </div>
+
+                    <div class="campo campo-situacao">
+
+                        <label for="situacao">Situação do estoque</label>
+
+                        <select id="situacao" name="situacao">
+
+                            <option value="todos"
+                                {% if situacao == "todos" %}selected{% endif %}>
+                                Todas as situações
+                            </option>
+
+                            <option value="zerado"
+                                {% if situacao == "zerado" %}selected{% endif %}>
+                                Estoque zerado
+                            </option>
+
+                            <option value="positivo"
+                                {% if situacao == "positivo" %}selected{% endif %}>
+                                Estoque positivo
+                            </option>
+
+                            <option value="negativo"
+                                {% if situacao == "negativo" %}selected{% endif %}>
+                                Estoque negativo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button type="submit">Pesquisar</button>
+
+                    {% if termo or situacao != "todos" %}
+
+                    <a
+                        class="botao botao-secundario"
+                        href="{% url 'lista_estoque' %}"
+                    >
+                        Limpar
+                    </a>
+
+                    {% endif %}
+
+                </form>
+
+            </section>
+
+            <!-- MENSAGEM DE ERRO -->
+            {% if erro %}
+
+                <p class="mensagem">{{ erro }}</p>
+
+            {% else %}
+
+            <!-- TABELA DE PRODUTOS -->
+            <section class="painel">
+
+                <div class="resumo-resultados">
+
+                    <div>
+                        <h2 class="painel-titulo">Produtos em estoque</h2>
+                        <p>{{ total|floatformat:0 }} produto(s) encontrado(s)</p>
+                    </div>
+
+                    <a
+                        class="botao botao-exportar"
+                        href="{% url 'exportar_estoque_csv' %}?q={{ termo|urlencode }}&situacao={{ situacao|urlencode }}"
+                    >
+                        ⇩ Exportar CSV
+                    </a>
+
+                </div>
+
+                <div class="tabela-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Código estrutural</th>
+                                <th>Código alternativo</th>
+                                <th>Produto</th>
+                                <th>Data do estoque</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for produto in produtos %}
+
+                            <tr>
+
+                                <td>
+                                    {{ produto.COD_ESTRUTURAL|default_if_none:"—" }}
+                                </td>
+
+                                <td>
+                                    {{ produto.COD_ALTERNATIVO|default_if_none:"—" }}
+                                </td>
+
+                                <td>
+                                    {{ produto.NOME_PRODUTO|default_if_none:"—" }}
+                                </td>
+
+                                <td>
+                                    {{ produto.DATA_ULT_ESTQ|date:"d/m/Y"|default_if_none:"—" }}
+                                </td>
+
+                                <td>
+                                    {% with quantidade=produto.QNT_ESTOQUE|default:0 %}
+
+                                        {% if quantidade < 0 %}
+
+                                            <span class="status-estoque negativo">
+                                                {{ quantidade }}
+                                            </span>
+
+                                        {% elif quantidade == 0 %}
+
+                                            <span class="status-estoque zerado">
+                                                {{ quantidade }}
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status-estoque positivo">
+                                                {{ quantidade }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endwith %}
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+                                <td colspan="5">
+                                    Nenhum produto encontrado.
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- PAGINAÇÃO -->
+                <div class="paginacao">
+
+                    <span>
+                        Página {{ pagina_atual }} de {{ total_paginas }}
+                    </span>
+
+                    <div class="acoes">
+
+                        {% if tem_anterior %}
+
+                        <a
+                            class="botao"
+                            href="?q={{ termo|urlencode }}&situacao={{ situacao|urlencode }}&page={{ pagina_atual|add:'-1' }}"
+                        >
+                            Anterior
+                        </a>
+
+                        {% endif %}
+
+                        {% if tem_proxima %}
+
+                        <a
+                            class="botao"
+                            href="?q={{ termo|urlencode }}&situacao={{ situacao|urlencode }}&page={{ pagina_atual|add:'1' }}"
+                        >
+                            Próxima
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+        </main>
+
+    </div>
+
+    <!-- BIBLIOTECA DO GRÁFICO -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% if indicadores %}
+
+    <script>
+
+        // FORMATAÇÃO DO VALOR FINANCEIRO
+        const elementoValor = document.getElementById("valorTotal");
+
+        if (elementoValor) {
+
+            const valor = Number(elementoValor.textContent.trim());
+
+            elementoValor.textContent = new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            }).format(valor);
+
+        }
+
+        // GRÁFICO DE DISTRIBUIÇÃO DO ESTOQUE
+        const contextoGrafico = document.getElementById("graficoEstoque");
+
+        if (contextoGrafico && typeof Chart !== "undefined") {
+
+            new Chart(contextoGrafico, {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: ["Zerado", "Positivo", "Negativo"],
+
+                    datasets: [{
+
+                        data: [
+                            {{ indicadores.estoque_zero|default:0 }},
+                            {{ indicadores.estoque_positivo|default:0 }},
+                            {{ indicadores.estoque_negativo|default:0 }}
+                        ],
+
+                        backgroundColor: [
+                            "#f59e0b",
+                            "#16a34a",
+                            "#dc2626"
+                        ],
+
+                        borderWidth: 0,
+                        hoverOffset: 8
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            position: "bottom"
+                        }
+
+                    },
+
+                    cutout: "65%"
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+    {% endif %}
+
+    <!-- FUNCIONAMENTO DO MENU MOBILE -->
+    <script>
+
+        const menuMobile = document.getElementById("menuMobile");
+        const sidebar = document.getElementById("sidebar");
+
+        if (menuMobile && sidebar) {
+
+            menuMobile.addEventListener("click", function () {
+
+                const aberto = sidebar.classList.toggle("aberto");
+
+                menuMobile.setAttribute("aria-expanded", aberto);
+
+                menuMobile.setAttribute(
+                    "aria-label",
+                    aberto ? "Fechar menu" : "Abrir menu"
+                );
+
+                menuMobile.textContent = aberto ? "✕" : "☰";
+
+            });
+
+        }
+
+    </script>
+
+</body>
+</html>
+```
