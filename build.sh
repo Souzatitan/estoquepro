@@ -4,4 +4,4 @@ set -o errexit
 pip install -r requirements.txt
 python backend/manage.py collectstatic --noinput
 python backend/manage.py migrate
-python backend/manage.py createsuperuser --noinput
+python backend/manage.py createsuperuser --noinput --username "$DJANGO_SUPERUSER_USERNAME" --email "$DJANGO_SUPERUSER_EMAIL"
