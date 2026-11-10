@@ -1,4 +1,4 @@
-{% load static %}
+{% load static l10n %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -415,18 +415,18 @@
     <script>
 
         // FORMATAÇÃO DO VALOR FINANCEIRO
-        const elementoValor = document.getElementById("valorTotal");
+            const elementoValor = document.getElementById("valorTotal");
 
         if (elementoValor) {
 
-            const valor = Number(elementoValor.textContent.trim());
+             const valor = Number("{{ indicadores.valor_total|default:0|unlocalize }}");
 
             elementoValor.textContent = new Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            }).format(valor);
+        style: "currency",
+        currency: "BRL"
+    }).format(valor);
 
-        }
+}
 
         // GRÁFICO DE DISTRIBUIÇÃO DO ESTOQUE
         const contextoGrafico = document.getElementById("graficoEstoque");
